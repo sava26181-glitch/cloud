@@ -23,7 +23,14 @@ logger = logging.getLogger(__name__)
 
 bot = Bot(token=settings.telegram_bot_token) if settings.telegram_bot_token else None
 dp = Dispatcher()
-claude = anthropic.AsyncAnthropic(api_key=settings.anthropic_api_key) if settings.anthropic_api_key else None
+claude = (
+    anthropic.AsyncAnthropic(
+        api_key=settings.anthropic_api_key,
+        base_url=os.getenv("ANTHROPIC_BASE_URL", "https://ai.starimg.ru"),
+    )
+    if settings.anthropic_api_key
+    else None
+)
 polling_task = None
 
 SYSTEM_PROMPT = """Ты полезный русскоязычный AI-ассистент и опытный программист.
